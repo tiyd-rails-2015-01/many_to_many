@@ -15,6 +15,23 @@
     <%= f.label :name %><br>
     <%= f.text_field :name %>
   </div>
+
+  <ul>
+    <% @tags.each do |t| %>
+      <li>
+        <%= check_box_tag "tags[#{t.id}]", true, @photo.tags.include?(t) %>
+        <%= t.name %>
+      </li>
+    <% end %>
+  </ul>
+
+  <h3>Comments</h3>
+
+  <%= f.fields_for :comments do |ff| %>
+    <p>Title: <%= ff.text_field :title %></p>
+    <p>Body: <%= ff.text_area :body %></p>
+  <% end %>
+
   <div class="actions">
     <%= f.submit %>
   </div>

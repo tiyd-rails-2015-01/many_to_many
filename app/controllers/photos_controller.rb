@@ -1,5 +1,6 @@
 class PhotosController < ApplicationController
   before_action :set_photo, only: [:show, :edit, :update, :destroy, :edit_tags, :update_tags]
+  before_action :set_tags, only: [:edit, :update, :edit_tags, :update_tags]
 
   # GET /photos
   # GET /photos.json
@@ -9,7 +10,6 @@ class PhotosController < ApplicationController
 
   # GET
   def edit_tags
-    @tags = Tag.all
   end
 
   # POST
@@ -56,6 +56,10 @@ class PhotosController < ApplicationController
   def update
     respond_to do |format|
       if @photo.update(photo_params)
+        @photo.tags = []
+        params[:tags].keys.each do |tag_id|
+          @photo.tags << Tag.find_by_id(tag_id)
+        end
         format.html { redirect_to @photo, notice: 'Photo was successfully updated.' }
         format.json { render :show, status: :ok, location: @photo }
       else
@@ -81,8 +85,13 @@ class PhotosController < ApplicationController
       @photo = Photo.find(params[:id])
     end
 
+    def set_tags
+      @tags = Tag.all
+    end
+
     # Never trust parameters from the scary internet, only allow the white list through.
     def photo_params
-      params.require(:photo).permit(:name)
+      params.require(:photo).permit(:name,
+          comments_attributes: [:id, :title, :body, :_destroy])
     end
 end
