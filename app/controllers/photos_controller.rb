@@ -33,6 +33,7 @@ class PhotosController < ApplicationController
 
   # GET /photos/1/edit
   def edit
+    @photo.comments.build
   end
 
   # POST /photos
